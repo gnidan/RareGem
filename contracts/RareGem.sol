@@ -16,7 +16,7 @@ contract RareGem {
         "teal",
         "blue",
         "navy",
-        "fucshia",
+        "fuchsia",
         "purple"
     ];
 

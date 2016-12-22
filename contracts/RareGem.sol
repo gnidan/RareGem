@@ -26,7 +26,6 @@ contract RareGem {
     mapping(string => bool) priorGuesses;
 
     mapping(string => bool) allowedGuesses;
-    mapping(string => bool) allowedGuessHashes;
 
     uint fee = 1 ether;
 

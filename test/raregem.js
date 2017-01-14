@@ -1,4 +1,77 @@
 contract('RareGem', function(accounts) {
+    it("should allow owner withdrawal", function(done) {
+        var rareGem = RareGem.deployed();
+
+        var owner = accounts[0];
+        var player = accounts[1];
+
+        var amount = web3.toWei(web3.toBigNumber('5'), 'ether');
+        var balanceBefore = web3.eth.getBalance(owner);
+
+        return rareGem.guess.sendTransaction('gray', {
+            from: player, value: amount
+        }).then(function () {
+            rareGem.withdraw.sendTransaction({
+                from: owner
+            }).then(function () {
+                assert.isAtLeast(
+                    // current balance
+                    web3.eth.getBalance(owner).toString(),
+
+                    // previous balance plus player's guess fee,
+                    // minus 1 ether for fees.
+                    balanceBefore.plus(amount).minus(
+                        web3.toWei('1', 'ether')
+                    ).toString()
+                );
+
+                // contract should be empty
+                assert.equal(
+                    web3.eth.getBalance(rareGem.address).toString(),
+                    web3.toWei('0', 'ether').toString()
+                );
+
+                done();
+            })
+        });
+    });
+
+    it("should prevent non-owner withdrawal", function(done) {
+        var rareGem = RareGem.deployed();
+
+        var owner = accounts[0];
+        var player = accounts[1];
+        var hacker = accounts[2];
+
+        var amount = web3.toWei(web3.toBigNumber('5'), 'ether');
+        var balanceBefore = web3.eth.getBalance(hacker);
+
+        return rareGem.guess.sendTransaction('silver', {
+            from: player, value: amount
+        }).then(function () {
+            rareGem.withdraw.sendTransaction({
+                from: hacker
+            }).catch(function (result) {
+                assert.isBelow(
+                    // current balance
+                    web3.eth.getBalance(hacker).toString(),
+
+                    // previous balance plus player's guess fee,
+                    // minus 1 ether for fees.
+                    balanceBefore.toString()
+                );
+
+                // contract should not be empty
+                assert.equal(
+                    web3.eth.getBalance(rareGem.address).toString(),
+                    amount.toString()
+                );
+
+                done();
+            });
+        });
+    });
+
     it("should require a fee of 1 ether", function(done) {
         var rareGem = RareGem.deployed();
 
@@ -100,7 +173,6 @@ contract('RareGem', function(accounts) {
                 from: accounts[0], value: web3.toWei('1', 'ether')
             })
         }).then(function () {
-            console.log("making second guess");
             return rareGem.guess.sendTransaction(answer, {
                 from: accounts[0], value: web3.toWei('1', 'ether')
             })

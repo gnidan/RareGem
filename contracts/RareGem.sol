@@ -20,6 +20,7 @@ contract RareGem {
         "purple"
     ];
 
+    address public owner;
     address public winner;
 
     bytes32 correctGuessHash;
@@ -39,7 +40,14 @@ contract RareGem {
         savingAllowedGuesses()
         ensureHashIsAllowedGuess(_correctGuessHash)
     {
+        owner = msg.sender;
         correctGuessHash = _correctGuessHash;
+    }
+
+    modifier onlyOwner {
+        if (msg.sender != owner)
+            throw;
+        _;
     }
 
     modifier savingAllowedGuesses() {
@@ -124,6 +132,10 @@ contract RareGem {
 				return false;
 		return true;
 	}
+
+    function withdraw() onlyOwner returns (bool) {
+        return owner.send(this.balance);
+    }
 
     event DebugUint(uint value);
     event DebugBytes(bytes32 value);

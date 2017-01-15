@@ -115,23 +115,23 @@ contract RareGem {
         priorGuesses[guess] = true;
     }
 
-	function stringsEqual(string storage _a, string memory _b)
+    function stringsEqual(string storage _a, string memory _b)
         internal
         returns (bool)
     {
         /* copied from
          * https://forum.ethereum.org/discussion/3238/string-compare-in-solidity
          */
-		bytes storage a = bytes(_a);
-		bytes memory b = bytes(_b);
-		if (a.length != b.length)
-			return false;
-		// @todo unroll this loop
-		for (uint i = 0; i < a.length; i ++)
-			if (a[i] != b[i])
-				return false;
-		return true;
-	}
+        bytes storage a = bytes(_a);
+        bytes memory b = bytes(_b);
+        if (a.length != b.length)
+            return false;
+        // @todo unroll this loop
+        for (uint i = 0; i < a.length; i ++)
+            if (a[i] != b[i])
+                return false;
+        return true;
+    }
 
     function withdraw() onlyOwner returns (bool) {
         return owner.send(this.balance);

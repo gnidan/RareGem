@@ -1,12 +1,16 @@
+var DefaultBuilder = require("truffle-default-builder");
+
 module.exports = {
-  networks: {
-      "ropsten": {
-          host: "parity-ropsten",
-          port: 8545
-      }
-  },
-  rpc: {
-    host: "testrpc",
-    port: 8545
-  }
+    build: new DefaultBuilder({}),
+
+    networks: {
+        "ropsten": {
+            host: "parity-ropsten",
+            port: 8545
+        }
+    },
+    rpc: {
+        host: "testrpc",
+        port: 8545
+    }
 };

@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/gnidan/RareGem#readme",
   "devDependencies": {
-    "mocha-generators": "^1.2.0"
+    "mocha-generators": "^1.2.0",
+    "truffle-default-builder": "^1.0.3"
   }
 }

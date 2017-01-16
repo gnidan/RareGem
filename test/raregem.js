@@ -1,16 +1,6 @@
 require('mocha-generators').install();
 
-function fetchEvent(events) {
-    return new Promise((resolve, reject) => {
-        events.watch((error, result) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-}
+var { fetchEvent } = require('./helpers');
 
 contract('RareGem', function(accounts) {
     it("should allow owner withdrawal", function* () {

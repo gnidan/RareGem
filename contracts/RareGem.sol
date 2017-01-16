@@ -1,6 +1,8 @@
 pragma solidity ^0.4.2;
 
-contract RareGem {
+import "./Owned.sol";
+
+contract RareGem is Owned {
     string[16] public colors = [
         "white",
         "silver",
@@ -20,7 +22,6 @@ contract RareGem {
         "purple"
     ];
 
-    address public owner;
     address public winner;
 
     bytes32 correctGuessHash;
@@ -40,14 +41,7 @@ contract RareGem {
         savingAllowedGuesses()
         ensureHashIsAllowedGuess(_correctGuessHash)
     {
-        owner = msg.sender;
         correctGuessHash = _correctGuessHash;
-    }
-
-    modifier onlyOwner {
-        if (msg.sender != owner)
-            throw;
-        _;
     }
 
     modifier savingAllowedGuesses() {

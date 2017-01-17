@@ -24,5 +24,6 @@ module.exports = function(deployer) {
         colorSHAs.push(web3.sha3(colors[i]));
     }
 
-    deployer.deploy(RareGem, web3.sha3('purple'), colorSHAs);
+    deployer.deploy(Colors, colorSHAs);
 };
+

@@ -1,13 +1,19 @@
 pragma solidity ^0.4.2;
 
 import "./RareGem.sol";
+import "./Colors.sol";
 
 contract RareGemFactory {
-    function createRareGem(bytes32 _correctGuessHash,
-                           bytes32[] _allowedGuessHashes)
+    address colors;
+
+    function RareGemFactory(address _colors) {
+        colors = _colors;
+    }
+
+    function createRareGem(bytes32 _correctGuessHash)
         returns (address contractAddress)
     {
-        RareGem rareGem = new RareGem(_correctGuessHash, _allowedGuessHashes);
+        RareGem rareGem = new RareGem(_correctGuessHash, colors);
         contractAddress = address(rareGem);
 
         rareGem.transfer(msg.sender);

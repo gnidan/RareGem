@@ -7,7 +7,7 @@ contract('RareGemFactory', function(accounts) {
         var factory = RareGemFactory.deployed();
 
         yield factory.createRareGem.sendTransaction(
-            web3.sha3("purple"), colorSHAs, {from: accounts[0]}
+            web3.sha3("purple"), Colors.deployed().address, {from: accounts[0]}
         );
 
         var log = yield fetchEvent(factory.allEvents());
@@ -19,7 +19,7 @@ contract('RareGemFactory', function(accounts) {
         var factory = RareGemFactory.deployed();
 
         yield factory.createRareGem.sendTransaction(
-            web3.sha3("purple"), colorSHAs, {from: accounts[0]}
+            web3.sha3("purple"), Colors.deployed().address, {from: accounts[0]}
         );
 
         var log = yield fetchEvent(factory.allEvents());

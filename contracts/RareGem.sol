@@ -1,12 +1,14 @@
 pragma solidity ^0.4.2;
 
 import "./Owned.sol";
+import "./Colors.sol";
 
 contract RareGem is Owned {
+    Colors colors;
+
     address public winner;
 
     bytes32 correctGuessHash;
-    mapping(bytes32 => bool) allowedGuessHashes;
 
     mapping(string => bool) priorGuesses;
 
@@ -18,26 +20,17 @@ contract RareGem is Owned {
     /*
      * Constructor
      */
-    function RareGem(bytes32 _correctGuessHash, bytes32[] _allowedGuessHashes)
-        ensureHashIsAllowedGuess(_correctGuessHash, _allowedGuessHashes)
+    function RareGem(bytes32 _correctGuessHash, address _colorsAddress)
+        ensureHashIsAllowedGuess(_correctGuessHash)
     {
         correctGuessHash = _correctGuessHash;
-        for (uint i = 0; i < _allowedGuessHashes.length; i++) {
-            allowedGuessHashes[_allowedGuessHashes[i]] = true;
-        }
+        colors = Colors(_colorsAddress);
     }
 
-    modifier ensureHashIsAllowedGuess(bytes32 hash, bytes32[] allowed) {
-        // no sense in mapping because only constructor needs to check hash
-        bool found = false;
-        for (uint i = 0; i < allowed.length; i++) {
-            if (allowed[i] == hash) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) throw;
+    modifier ensureHashIsAllowedGuess(bytes32 hash) {
         _;
+
+        if (!colors.isValidHash(hash)) throw;
     }
 
     /*
@@ -70,7 +63,7 @@ contract RareGem is Owned {
     }
 
     modifier onlyAllowedGuesses(string guess) {
-        if (!allowedGuessHashes[sha3(guess)]) throw;
+        if (!colors.isValid(guess)) throw;
         _;
     }
 

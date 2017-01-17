@@ -3,31 +3,12 @@ pragma solidity ^0.4.2;
 import "./Owned.sol";
 
 contract RareGem is Owned {
-    string[16] public colors = [
-        "white",
-        "silver",
-        "gray",
-        "black"
-        "red",
-        "maroon",
-        "yellow",
-        "olive",
-        "lime",
-        "green",
-        "aqua",
-        "teal",
-        "blue",
-        "navy",
-        "fuchsia",
-        "purple"
-    ];
-
     address public winner;
 
     bytes32 correctGuessHash;
-    mapping(string => bool) priorGuesses;
+    mapping(bytes32 => bool) allowedGuessHashes;
 
-    mapping(string => bool) allowedGuesses;
+    mapping(string => bool) priorGuesses;
 
     uint fee = 1 ether;
 
@@ -37,26 +18,20 @@ contract RareGem is Owned {
     /*
      * Constructor
      */
-    function RareGem(bytes32 _correctGuessHash)
-        savingAllowedGuesses()
-        ensureHashIsAllowedGuess(_correctGuessHash)
+    function RareGem(bytes32 _correctGuessHash, bytes32[] _allowedGuessHashes)
+        ensureHashIsAllowedGuess(_correctGuessHash, _allowedGuessHashes)
     {
         correctGuessHash = _correctGuessHash;
-    }
-
-    modifier savingAllowedGuesses() {
-        // create fast lookup so that user transactions can be cheaper :0)
-        for (uint i=0; i < colors.length; i++) {
-            allowedGuesses[colors[i]] = true;
+        for (uint i = 0; i < _allowedGuessHashes.length; i++) {
+            allowedGuessHashes[_allowedGuessHashes[i]] = true;
         }
-        _;
     }
 
-    modifier ensureHashIsAllowedGuess(bytes32 hash) {
+    modifier ensureHashIsAllowedGuess(bytes32 hash, bytes32[] allowed) {
         // no sense in mapping because only constructor needs to check hash
         bool found = false;
-        for (uint i = 0; i < colors.length; i++) {
-            if (sha3(colors[i]) == hash) {
+        for (uint i = 0; i < allowed.length; i++) {
+            if (allowed[i] == hash) {
                 found = true;
                 break;
             }
@@ -95,7 +70,7 @@ contract RareGem is Owned {
     }
 
     modifier onlyAllowedGuesses(string guess) {
-        if (!allowedGuesses[guess]) throw;
+        if (!allowedGuessHashes[sha3(guess)]) throw;
         _;
     }
 

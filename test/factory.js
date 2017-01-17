@@ -1,13 +1,13 @@
 require('mocha-generators').install();
 
-var { fetchEvent } = require('./helpers');
+var { fetchEvent, colorSHAs } = require('./helpers');
 
 contract('RareGemFactory', function(accounts) {
     it("should create contracts", function* () {
         var factory = RareGemFactory.deployed();
 
         yield factory.createRareGem.sendTransaction(
-            web3.sha3("purple"), {from: accounts[0]}
+            web3.sha3("purple"), colorSHAs, {from: accounts[0]}
         );
 
         var log = yield fetchEvent(factory.allEvents());
@@ -19,7 +19,7 @@ contract('RareGemFactory', function(accounts) {
         var factory = RareGemFactory.deployed();
 
         yield factory.createRareGem.sendTransaction(
-            web3.sha3("purple"), {from: accounts[0]}
+            web3.sha3("purple"), colorSHAs, {from: accounts[0]}
         );
 
         var log = yield fetchEvent(factory.allEvents());

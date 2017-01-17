@@ -1,6 +1,6 @@
 require('mocha-generators').install();
 
-var { fetchEvent } = require('./helpers');
+var { fetchEvent, colorSHAs } = require('./helpers');
 
 contract('RareGem', function(accounts) {
     it("should allow owner withdrawal", function* () {
@@ -141,7 +141,7 @@ contract('RareGem', function(accounts) {
         var wrongAnswer = 'green';
 
         var rareGem = yield RareGem.new(
-            web3.sha3(correctAnswer), {from: accounts[0]}
+            web3.sha3(correctAnswer), colorSHAs, {from: accounts[0]}
         );
 
         yield rareGem.guess.sendTransaction(wrongAnswer, {
@@ -159,7 +159,7 @@ contract('RareGem', function(accounts) {
         var answer = 'purple';
 
         var rareGem = yield RareGem.new(
-            web3.sha3(answer), {from: accounts[0]}
+            web3.sha3(answer), colorSHAs, {from: accounts[0]}
         );
 
         yield rareGem.guess.sendTransaction(answer, {
@@ -176,7 +176,10 @@ contract('RareGem', function(accounts) {
     it("should error if there's been a winner", function* () {
         var answer = 'purple';
 
-        var rareGem = yield RareGem.new(web3.sha3(answer), {from: accounts[0]});
+        var rareGem = yield RareGem.new(
+            web3.sha3(answer), colorSHAs,
+            {from: accounts[0]}
+        );
 
         yield rareGem.guess.sendTransaction(answer, {
             from: accounts[0], value: web3.toWei('1', 'ether')

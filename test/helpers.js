@@ -10,6 +10,27 @@ function fetchEvent(events) {
     });
 }
 
+const colors = [
+    "white",
+    "silver",
+    "gray",
+    "black",
+    "red",
+    "maroon",
+    "yellow",
+    "olive",
+    "lime",
+    "green",
+    "aqua",
+    "teal",
+    "blue",
+    "navy",
+    "fuchsia",
+    "purple"
+];
+
+const colorSHAs = colors.map((color) => web3.sha3(color));
+
 module.exports = {
-    fetchEvent
+    fetchEvent, colors, colorSHAs
 };
